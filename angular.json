@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ngrx-poc"
+    }
+  },
+  "defaultProject": "ngrx-poc",
+  "cli": {
+    "analytics": false
+  }
 }
