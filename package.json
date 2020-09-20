@@ -25,7 +25,11 @@
     "normalize.css": "^8.0.1",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.3"
+    "zone.js": "~0.10.3",
+    "@fortawesome/angular-fontawesome": "^0.3.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.6",
+    "@fortawesome/free-brands-svg-icons": "^5.4.1",
+    "@fortawesome/free-solid-svg-icons": "^5.4.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1000.7",
