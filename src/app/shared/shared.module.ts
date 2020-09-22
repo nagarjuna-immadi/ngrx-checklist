@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatIconModule } from "@angular/material/icon";
+import { MatCardModule } from "@angular/material/card";
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 
@@ -15,7 +19,15 @@ library.add(faGithub, faTwitter, faHeart, faHandsHelping, faBell, faBan, faInfo)
 
 const materialModules = [
   MatToolbarModule,
-  MatDialogModule
+  MatDialogModule,
+  MatIconModule,
+  MatCardModule
+];
+
+const otherModules = [
+  FontAwesomeModule,
+  FormsModule,
+  ReactiveFormsModule
 ];
 
 const components = [HeaderComponent, FooterComponent];
@@ -24,13 +36,13 @@ const components = [HeaderComponent, FooterComponent];
   declarations: [...components, AboutDialogComponent],
   imports: [
     CommonModule,
-    ...materialModules,
-    FontAwesomeModule
+    ...otherModules,
+    ...materialModules
   ],
   exports: [
-    ...materialModules,
     ...components,
-    FontAwesomeModule
+    ...otherModules,
+    ...materialModules
   ]
 })
 export class SharedModule { }
