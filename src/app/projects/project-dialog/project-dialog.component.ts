@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { Project } from "../models/projects.model";
+import { convertToProjectId } from '../../shared/utils';
 
 export enum ProjectDialogMode {
   Create = 'Create',
@@ -71,6 +72,39 @@ export class ProjectDialogComponent implements OnInit {
     this.title = title;
     this.submitButtonText = !submitButtonText ? title : submitButtonText;
     this.projectName.setValue(this.project.name);
+  }
+
+  close() {
+    if (this.canClose()) {
+      const projectName = this.projectName.value;
+      const projectId = this.generateProjectId(projectName);
+
+      return this.dialogRef.close({
+        type: ProjectDialogResultType.AddOrEdit,
+        payload: { id: projectId, name: projectName }
+      });
+    }
+  }
+
+  canClose() {
+    return (
+      this.projectName.valid &&
+      !this.projectName.pending &&
+      this.projectName.dirty &&
+      !this.projectName.pristine &&
+      this.hasChanged(this.projectName.value, this.project.name)
+    );
+  }
+
+  private generateProjectId(name: string) {
+    return convertToProjectId(name.trim());
+  }
+
+  private hasChanged(current: string, old: string) {
+    const currentId = this.generateProjectId(current);
+    const oldId = this.generateProjectId(old);
+
+    return currentId !== oldId;
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
-import { map, tap } from 'rxjs/operators';
+import { filter, map, observeOn } from 'rxjs/operators';
+import { asyncScheduler } from "rxjs";
 import { 
   ProjectDialogComponent,
   ProjectDialogData,
@@ -26,9 +27,15 @@ export class ProjectsListComponent implements OnInit {
   addProject() {
     this.openProjectDialog({ title: 'Add Project', submitButtonText: 'Create' })
       .pipe(
-        tap(data => console.log("data", data))
+        map(({payload: newProject}) => {
+          console.log(newProject);
+          return newProject;
+        }),
+        observeOn(asyncScheduler)
       )
-      .subscribe();
+      .subscribe(({ id }) => {
+        console.log('Project Id', id);
+      });
   }
 
   editProject() {}
@@ -39,6 +46,7 @@ export class ProjectsListComponent implements OnInit {
       data
     })
     .afterClosed();
+    //.pipe<ProjectDialogResult>(filter(() => true));
   }
 
 }

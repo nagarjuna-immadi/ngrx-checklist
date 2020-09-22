@@ -1,1 +1,21 @@
-<p>project-dialog works!</p>
+<h1 mat-dialog-title>
+    <span>{{ title }}</span>
+</h1>
+<mat-dialog-content>
+    <div class="project-info">
+        <mat-form-field>
+            <input matInput [formControl]="projectName" [errorStateMatcher]="errorStateMatcher"
+                (keydown.enter)="close()" cdkFocusInitial placeholder="Project Name" type="text" />
+            <mat-hint align="end">{{ projectName.value?.length || 0 }}/{{ maxLength }}</mat-hint>
+            <mat-error *ngIf="projectName.hasError('projectExists')">Project already exists</mat-error>
+            <mat-spinner *ngIf="projectName.pending" diameter="20" color="primary" matSuffix></mat-spinner>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="null">Cancel</button>
+    <button mat-raised-button color="primary" (click)="close()" [disabled]="!canClose()"
+        [mat-dialog-close]="projectName.value">
+        {{ submitButtonText }}
+    </button>
+</mat-dialog-actions>
