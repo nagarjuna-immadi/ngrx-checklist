@@ -29,9 +29,9 @@ export class ProjectsListComponent implements OnInit {
       .pipe(
         map(({payload: newProject}) => {
           console.log(newProject);
+          
           return newProject;
-        }),
-        observeOn(asyncScheduler)
+        })
       )
       .subscribe(({ id }) => {
         console.log('Project Id', id);
@@ -45,8 +45,9 @@ export class ProjectsListComponent implements OnInit {
       minWidth: 350,
       data
     })
-    .afterClosed();
-    //.pipe<ProjectDialogResult>(filter(() => true));
+    .afterClosed()
+    .pipe(filter(Boolean));
   }
+  
 
 }
