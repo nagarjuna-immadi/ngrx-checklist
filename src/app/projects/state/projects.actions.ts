@@ -2,7 +2,7 @@ import { createAction, props } from "@ngrx/store";
 import { Project } from "../models/projects.model";
 
 
-export const add = createAction(
+export const addProject = createAction(
     '[Projects] add project',
-    props<Partial<Project>>()
+    props<{project: Partial<Project>}>()
 );

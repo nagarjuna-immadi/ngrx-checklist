@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { filter, map, observeOn } from 'rxjs/operators';
-import { asyncScheduler } from "rxjs";
+import { asyncScheduler, Observable } from "rxjs";
 import { 
   ProjectDialogComponent,
   ProjectDialogData,
@@ -10,6 +10,12 @@ import {
   ProjectDialogResultType
  } from "../project-dialog/project-dialog.component";
 
+ import { Store, select } from "@ngrx/store";
+ import { ApplicationState } from "../../state/app.state";
+ import * as ProjectActions from "../state/projects.actions";
+import { Project } from '../models/projects.model';
+import { ProjectsSelectors } from "../state/projects.selectors";
+
 @Component({
   selector: 'nc-projects-list',
   templateUrl: './projects-list.component.html',
@@ -17,9 +23,13 @@ import {
 })
 export class ProjectsListComponent implements OnInit {
 
-  constructor(private dialog: MatDialog) { }
+  projects$: Observable<Array<Project>>;
+
+  constructor(private dialog: MatDialog, private store: Store<ApplicationState>) { }
 
   ngOnInit(): void {
+    this.projects$ = this.store.pipe(select(ProjectsSelectors.getProjects));
+    console.log('projects', this.projects$);
   }
 
   navigateToProject(projectId: string) {}
@@ -28,8 +38,8 @@ export class ProjectsListComponent implements OnInit {
     this.openProjectDialog({ title: 'Add Project', submitButtonText: 'Create' })
       .pipe(
         map(({payload: newProject}) => {
-          console.log(newProject);
-          
+          this.store.dispatch(ProjectActions.addProject({project: newProject}));
+
           return newProject;
         })
       )
