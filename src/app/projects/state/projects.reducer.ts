@@ -12,42 +12,50 @@ const initialState: ProjectsState = {
 
 const _projectsReducer = createReducer(
     initialState,
-    on(
-        ProjectActions.addProject, 
-        (state: ProjectsState, action) => {
-            const project = action.project;
-            return {
-                ...state,
-                entities: {
-                    ...state.entities,
-                    [project.id]: createNewProject(project.id, project.name)
-                }
+    on(ProjectActions.addProject, (state: ProjectsState, action) => {
+        const project = action.project;
+        return {
+            ...state,
+            entities: {
+                ...state.entities,
+                [project.id]: createNewProject(project.id, project.name)
             }
         }
-    )
-);
+    }),
+    on(ProjectActions.editProject, (state: ProjectsState, action) => {
+        const current = action.current;
+        const updated = action.updated;
+        let entities = {...state.entities};
+        delete entities[current.id];
+        const updatedProject = {
+            ...current,
+            ...updated
+        };
+        entities = {
+            ...entities,
+            [updatedProject.id]: updatedProject
+        };
 
-/* const _projectEntitiesReducer = createReducer(
-    on(
-        ProjectActions.addProject,
-        (state: ProjectsState, action) => {
-            const entities = state.entities;
-            const project = action.project;
-
-            return {
-                ...state,
-                entities: {
-                    ...entities,
-                    [project.id]: createNewProject(project.id, project.name)
-                }
+        return {
+            ...state,
+            entities: {
+                ...entities
             }
         }
-    )
-);
+    }),
+    on(ProjectActions.deleteProject, (state: ProjectsState, action) => {
+        const projectId = action.projectId;
+        let entities = {...state.entities};
+        delete entities[projectId];
 
-function projectEntitiesReducer(state: ProjectsState, action: Action) {
-    return _projectEntitiesReducer(state, action);
-} */
+        return {
+            ...state,
+            entities: {
+                ...entities
+            }
+        }
+    })
+);
 
 export function projectsReducer(state: ProjectsState, action: Action) {
     return _projectsReducer(state, action);

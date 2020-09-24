@@ -15,6 +15,7 @@ import {
  import * as ProjectActions from "../state/projects.actions";
 import { Project } from '../models/projects.model';
 import { ProjectsSelectors } from "../state/projects.selectors";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'nc-projects-list',
@@ -25,14 +26,17 @@ export class ProjectsListComponent implements OnInit {
 
   projects$: Observable<Array<Project>>;
 
-  constructor(private dialog: MatDialog, private store: Store<ApplicationState>) { }
+  constructor(private dialog: MatDialog, private store: Store<ApplicationState>, private router: Router) { }
 
   ngOnInit(): void {
     this.projects$ = this.store.pipe(select(ProjectsSelectors.getProjects));
     console.log('projects', this.projects$);
   }
 
-  navigateToProject(projectId: string) {}
+  navigateToProject(projectId: string) {
+    console.log(projectId);
+    this.router.navigate([`/${projectId}/checklist`]);
+  }
 
   addProject() {
     this.openProjectDialog({ title: 'Add Project', submitButtonText: 'Create' })
@@ -45,10 +49,30 @@ export class ProjectsListComponent implements OnInit {
       )
       .subscribe(({ id }) => {
         console.log('Project Id', id);
+        this.navigateToProject(id);
       });
   }
 
-  editProject() {}
+  editProject(event: MouseEvent, project: Project) {
+    event.stopPropagation();
+
+    this.openProjectDialog({
+      title: 'Edit Project',
+      submitButtonText: 'Save',
+      mode: ProjectDialogMode.Edit,
+      project
+    }).subscribe((result: ProjectDialogResult) => {
+      console.log(result);
+      const updatedProject = result.payload;
+      this.store.dispatch(ProjectActions.editProject({current: project, updated: updatedProject})); 
+    });
+  }
+
+  deleteProject(event: MouseEvent, project: Project) {
+    event.stopPropagation();
+
+    this.store.dispatch(ProjectActions.deleteProject({projectId: project.id}));
+  }
 
   private openProjectDialog(data: Partial<ProjectDialogData>) {
     return this.dialog.open(ProjectDialogComponent, {

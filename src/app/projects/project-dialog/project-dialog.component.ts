@@ -79,10 +79,12 @@ export class ProjectDialogComponent implements OnInit {
       const projectName = this.projectName.value;
       const projectId = this.generateProjectId(projectName);
 
-      return this.dialogRef.close({
+      const result: ProjectDialogResult = {
         type: ProjectDialogResultType.AddOrEdit,
         payload: { id: projectId, name: projectName }
-      });
+      };
+
+      return this.dialogRef.close(result);
     }
   }
 

@@ -27,6 +27,9 @@
                 <button (click)="editProject($event, project)" (mousedown)="$event.stopPropagation()" mat-icon-button>
                     <mat-icon>edit</mat-icon>
                 </button>
+                <button (click)="deleteProject($event, project)" (mousedown)="$event.stopPropagation()" mat-icon-button>
+                    <mat-icon>delete</mat-icon>
+                </button>
             </mat-card-actions>
         </mat-card>
     </div>
